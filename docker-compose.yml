@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - vivek-network
+    volumes:
+      - mongo-data:/data/db
+
+  scrapper:
+    build: ./scrapper
+    networks:
+      - vivek-network
+    depends_on:
+      - mongodb
+    volumes:
+      - shared-data:/shared-data
+
+  analytics:
+    build: ./analytics
+    networks:
+      - vivek-network
+    volumes:
+      - shared-data:/shared-data
+    depends_on:
+      - mongodb
+
+  web:
+    build: ./web
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    networks:
+      - vivek-network
+    volumes:
+      - shared-data:/shared-data
+
+  indexer:
+    build: ./indexer
+    networks:
+      - vivek-network
+    volumes:
+      - shared-data:/shared-data
+    depends_on:
+      - mongodb
+
+networks:
+  vivek-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  shared-data:

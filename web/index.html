@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze Query</title>
+    <style>
+        body {
+            background-color: #FF9933; /* Saffron color */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #response {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            text-align: left; /* Changed to left-align */
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical; /* Allowing vertical resizing */
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #swami-photo {
+            width: 100px; /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+
+        <img src="https://gesturegraphics.wordpress.com/wp-content/uploads/2008/08/sv.jpg" alt="Swami Vivekananda" id="swami-photo"> <!-- Replace the URL with the actual URL of the image -->
+        <input type="text" id="query" style="width: 80%;height:120px;text-align:left;vertical-align:top" rows="4">
+        <button onclick="analyzeQuery()">Submit</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        async function analyzeQuery() {
+            const query = document.getElementById('query').value;
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = ''; // Clear previous response
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    responseDiv.innerHTML = responseData.join('<br><br>');
+                } else {
+                    responseDiv.innerHTML = `Error: ${response.statusText}`;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
