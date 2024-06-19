@@ -13,7 +13,7 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install requests beautifulsoup4 cohere numpy pandas pymongo annoy
+RUN pip install requests beautifulsoup4 cohere numpy pandas pymongo annoy sentence_transformers
 # Expose the port the app runs on
 
 # Run app.py (the Flask app) when the container launches

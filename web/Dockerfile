@@ -13,7 +13,7 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install requests beautifulsoup4 cohere numpy pandas pymongo annoy flask
+RUN pip install requests beautifulsoup4 numpy pandas pymongo annoy flask sentence_transformers
 
 # Expose the port the app runs on
 EXPOSE 5000

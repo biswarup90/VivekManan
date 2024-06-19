@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install requests beautifulsoup4 cohere numpy pandas pymongo
+RUN pip install requests beautifulsoup4 pymongo
 
 # Run scrapper.py when the container launches
 CMD ["python", "scrapper.py"]

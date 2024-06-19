@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import pandas as pd
 import cohere
 import os
+
 pd.set_option('display.max_colwidth', None)
 
 MONGO_HOST = "mongodb"
@@ -10,8 +11,12 @@ MONGO_PORT = 27017
 MONGO_DB = "scraped_data"
 MONGO_COLLECTION = "swami_vivekananda"
 
-api_key = 'your-api-key-here'
+api_key = 'gGhwGVPPwWtwAlDUr3O968CgZE1xrjlSInUuDLO9'
 co = cohere.Client(api_key)
+
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
 num_responses = 4
 
 
@@ -63,6 +68,7 @@ def analyze(query):
         print(response_texts)
     return []
 
+
 def analyze_v2(query):
     collection = connect_to_mongodb()
     cursor = collection.find({"embedding": {"$exists": True}})
@@ -105,6 +111,46 @@ def analyze_v2(query):
     print(response_texts)
 
 
+def analyze_sbert(query):
+    collection = connect_to_mongodb()
+    cursor = collection.find({"embedding": {"$exists": True}})
+    embeds = []
+    texts = []
+    urls = []
+    for doc in cursor:
+        embeds.append(doc["embedding"])
+        texts.append(doc["text"])
+        urls.append(doc["url"])
+
+    index_metadata = collection.find_one({"_id": "index_metadata"})
+    if not index_metadata:
+        print("Index metadata not found in MongoDB")
+        return None
+
+    index_file_path = index_metadata["index_file_path"]
+    if not os.path.isfile(index_file_path):
+        print(f"File not found: {index_file_path}")
+        return None
+    print(f"Loading Annoy index from {index_file_path}")
+
+    # Assuming the dimensionality of the embeddings is known
+    print("Embedding dim: ", len(embeds[0]))
+    f = len(embeds[0])  # Replace with the actual dimensionality
+    search_index = AnnoyIndex(f, 'euclidean')
+    search_index.load(index_file_path)
+    print("Annoy index loaded successfully")
+
+    query_embed = model.encode(query)
+    similar_item_ids = search_index.get_nns_by_vector(query_embed, num_responses, include_distances=True)
+    extracted_text = [texts[i] for i in similar_item_ids[0]]
+    extracted_url = [urls[i] for i in similar_item_ids[0]]
+
+    results = pd.DataFrame(data={'texts': extracted_text, 'urls': extracted_url, 'distance': similar_item_ids[1]})
+    result_text = results['texts'].tolist()
+    result_url = results['urls'].tolist()
+    print(result_text)
+    print(result_url)
+
 
 if __name__ == "__main__":
-    analyze_v2("What is attachment?")
+    analyze_sbert("What is attachment?")

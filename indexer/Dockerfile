@@ -12,7 +12,7 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install requests beautifulsoup4 cohere numpy pandas pymongo annoy
+RUN pip install requests beautifulsoup4 cohere numpy pandas pymongo annoy sentence_transformers
 
 # Run scrapper.py when the container launches
-CMD ["python", "indexer.py"]
+CMD ["python", "indexer_local_embedding.py"]

@@ -78,7 +78,32 @@
 
                 if (response.ok) {
                     const responseData = await response.json();
-                    responseDiv.innerHTML = responseData.join('<br><br>');
+                    const table = document.createElement('table');
+                    table.style.width = '100%';
+                    table.border = '1';
+
+                    const header = table.createTHead();
+                    const headerRow = header.insertRow(0);
+                    const cell1 = headerRow.insertCell(0);
+                    const cell2 = headerRow.insertCell(1);
+                    cell1.innerHTML = '<b>Text</b>';
+                    cell2.innerHTML = '<b>URL</b>';
+
+                    const tbody = table.createTBody();
+                    responseData.forEach(item => {
+                        const row = tbody.insertRow();
+                        const textCell = row.insertCell(0);
+                        const urlCell = row.insertCell(1);
+
+                        textCell.textContent = item.text;
+                        const urlLink = document.createElement('a');
+                        urlLink.href = item.url;
+                        urlLink.textContent = item.url;
+                        urlLink.target = "_blank"; // Open URL in a new tab
+                        urlCell.appendChild(urlLink);
+                    });
+
+                    responseDiv.appendChild(table);
                 } else {
                     responseDiv.innerHTML = `Error: ${response.statusText}`;
                 }
