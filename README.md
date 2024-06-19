@@ -2,11 +2,18 @@
 ## Overview
 This project provides a semantic search tool for Swami Vivekananda's Complete Works. It allows students, researchers, and enthusiasts to search topics, keywords, and quotes from the vast collection of Swami Vivekananda's writings. The search leverages advanced text embedding techniques to ensure that the results are contextually relevant, going beyond simple keyword matching.
 ## Features
-Comprehensive Coverage: Includes the entire collection of Swami Vivekananda's works.
-Semantic Search: Uses state-of-the-art text embeddings to understand the context and return relevant results.
-Top Matches: Returns the top n most relevant passages for each query.
-Scalable and Fast: Utilizes Annoy indexes for quick retrieval of search results.
-Dockerized Deployment: The entire project is containerized for easy setup and deployment.
+*Comprehensive Coverage:* Includes the entire collection of Swami Vivekananda's works.  
+  
+*Semantic Search:* Uses state-of-the-art text embeddings to understand the context and return relevant results.  
+
+*Sentence Transformer Finetuning*: Trained pre-trained sentence transformers on custom dataset to make results more relevant to our topic.  
+  
+*Top Matches:* Returns the top n most relevant passages for each query.  
+  
+*Scalable and Fast:* Utilizes Annoy indexes for quick retrieval of search results.  
+  
+*Dockerized Deployment:* The entire project is containerized for easy setup and deployment.  
+  
 ## Project Structure
 ### Scraper
 Scrap the CWSV
