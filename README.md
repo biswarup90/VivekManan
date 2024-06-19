@@ -4,7 +4,7 @@ This project provides a semantic search tool for Swami Vivekananda's Complete Wo
 ## Features
 Comprehensive Coverage: Includes the entire collection of Swami Vivekananda's works.
 Semantic Search: Uses state-of-the-art text embeddings to understand the context and return relevant results.
-Top Matches: Returns the top 3 most relevant passages for each query.
+Top Matches: Returns the top n most relevant passages for each query.
 Scalable and Fast: Utilizes Annoy indexes for quick retrieval of search results.
 Dockerized Deployment: The entire project is containerized for easy setup and deployment.
 ## Project Structure
@@ -13,7 +13,7 @@ Scrap the CWSV
 Save the scrapped content to db
 ### Indexer
 Read Scrapped Text
-Create Text Embeddings
+Create Text Embeddings using Sentence Transformer.
 ANN Index Embeddings 
 Save to DB
 ### Analyzer
@@ -31,10 +31,11 @@ Display closest items
 ## Semantic Search Explained
 Semantic search is an advanced technique that uses natural language processing (NLP) to understand the meaning and context of the text. Unlike traditional keyword-based search, which looks for exact matches of words, semantic search interprets the user's query to find contextually relevant information.
 ## How It Works
-Data Scraping: The complete works of Swami Vivekananda are scraped and preprocessed.
-Text Embedding: Each document is converted into a dense vector representation (embedding) using a pre-trained NLP model.
+Data Scraping: The complete works of Swami Vivekananda are scraped and preprocessed from https://www.ramakrishnavivekananda.info/vivekananda/complete_works.htm.
+Text Embedding: We have experimented with two pre-trained base models - all-mpnet-base-v2 and all-MiniLM-L6-v2.
+Then we have fine tuned these models from the Complete works of Swami Vivekananda to make the results more relevant. Each document is converted into a dense vector representation (embedding) using a sentence transformer.
 Indexing: The embeddings are indexed using Annoy (Approximate Nearest Neighbors Oh Yeah), which allows for efficient similarity search.
-Query Processing: When a user submits a query, it is also converted into an embedding.
+Query Processing: When a user submits a query, it is also converted into an embedding using the same fine-tuned model.
 Similarity Search: The query embedding is compared against the precomputed embeddings using the Annoy index to find the closest matches.
 Results: The top 3 most similar passages are returned to the user
 ## Setup and Installation
@@ -48,7 +49,6 @@ docker-compose up --build
 ```
 3. Access the Web Application
 Open your web browser and navigate to http://localhost:5000 to access the search interface.
-4. Note - You will need to use your api-key for cohere from here - https://dashboard.cohere.com/api-keys
 ## Enhancements
 This project can be further improved by:
 
